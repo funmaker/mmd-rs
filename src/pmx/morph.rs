@@ -64,13 +64,13 @@ impl<VI: Display> Display for VertexOffset<VI> {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub struct BoneOffset<BI> {
-  pub bone: BI,
+pub struct BoneOffset<BoneIndex> {
+  pub bone: BoneIndex,
   pub translation: [f32; 3],
   pub rotation: [f32; 4],
 }
 
-impl<BI: Display> Display for BoneOffset<BI> {
+impl<BoneIndex: Display> Display for BoneOffset<BoneIndex> {
   fn fmt(&self, f: &mut Formatter) -> Result<(), std::fmt::Error> {
     write!(
       f,
@@ -155,14 +155,14 @@ texture tint: {:?}, environment tint: {:?}, toon tint: {:?}",
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub struct ImpulseOffset<RBI> {
-  pub rigid_body: RBI,
+pub struct ImpulseOffset<RigidBodyIndex> {
+  pub rigid_body: RigidBodyIndex,
   pub local: bool,
   pub velocity: [f32; 3],
   pub torque: [f32; 3],
 }
 
-impl<RBI: Display> Display for ImpulseOffset<RBI> {
+impl<RigidBodyIndex: Display> Display for ImpulseOffset<RigidBodyIndex> {
   fn fmt(&self, f: &mut Formatter) -> Result<(), std::fmt::Error> {
     write!(
       f,
@@ -176,10 +176,10 @@ impl<RBI: Display> Display for ImpulseOffset<RBI> {
 }
 
 #[derive(Clone, Debug, PartialEq)]
-pub enum Offsets<I, VI, BI, MI, RBI> {
+pub enum Offsets<I, VI, BoneIndex, MI, RigidBodyIndex> {
   Group(Vec<MorphOffset<I>>),
   Vertex(Vec<VertexOffset<VI>>),
-  Bone(Vec<BoneOffset<BI>>),
+  Bone(Vec<BoneOffset<BoneIndex>>),
   UV(Vec<UVOffset<VI>>),
   AdditionalUV1(Vec<UVOffset<VI>>),
   AdditionalUV2(Vec<UVOffset<VI>>),
@@ -187,16 +187,16 @@ pub enum Offsets<I, VI, BI, MI, RBI> {
   AdditionalUV4(Vec<UVOffset<VI>>),
   Material(Vec<MaterialOffset<MI>>),
   Flip(Vec<MorphOffset<I>>),
-  Impulse(Vec<ImpulseOffset<RBI>>),
+  Impulse(Vec<ImpulseOffset<RigidBodyIndex>>),
 }
 
-impl<I, VI, BI, MI, RBI> Display for Offsets<I, VI, BI, MI, RBI>
+impl<I, VI, BoneIndex, MI, RigidBodyIndex> Display for Offsets<I, VI, BoneIndex, MI, RigidBodyIndex>
 where
   I: Display,
   VI: Display,
-  BI: Display,
+  BoneIndex: Display,
   MI: Display,
-  RBI: Display,
+  RigidBodyIndex: Display,
 {
   fn fmt(&self, f: &mut Formatter) -> Result<(), std::fmt::Error> {
     match self {
@@ -215,16 +215,16 @@ where
   }
 }
 
-pub struct Morph<I, VI, BI, MI, RBI> {
+pub struct Morph<I, VI, BoneIndex, MI, RigidBodyIndex> {
   pub local_name: String,
   pub universal_name: String,
   pub panel: Panel,
-  pub offsets: Offsets<I, VI, BI, MI, RBI>,
+  pub offsets: Offsets<I, VI, BoneIndex, MI, RigidBodyIndex>,
 }
 
-impl<I, VI, BI, MI, RBI> Display for Morph<I, VI, BI, MI, RBI>
+impl<I, VI, BoneIndex, MI, RigidBodyIndex> Display for Morph<I, VI, BoneIndex, MI, RigidBodyIndex>
 where
-  Offsets<I, VI, BI, MI, RBI>: Display,
+  Offsets<I, VI, BoneIndex, MI, RigidBodyIndex>: Display,
 {
   fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {
     write!(

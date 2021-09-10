@@ -25,7 +25,7 @@ impl<R: Read> VertexReader<R> {
     })
   }
 
-  pub fn next_vertex<I: Index>(&mut self) -> Result<Option<Vertex<I>>> {
+  pub fn next_vertex<BoneIndex: Index>(&mut self) -> Result<Option<Vertex<BoneIndex>>> {
     if self.remaining == 0 {
       return Ok(None);
     }
@@ -38,15 +38,15 @@ impl<R: Read> VertexReader<R> {
     }
 
     let weight_deform = match self.read.read_u8()? {
-      0u8 => WeightDeform::Bdef1(Bdef1::<I> {
+      0u8 => WeightDeform::Bdef1(Bdef1::<BoneIndex> {
         bone_index: self.read.read_index(self.settings.bone_index_size)?,
       }),
-      1u8 => WeightDeform::Bdef2(Bdef2::<I> {
+      1u8 => WeightDeform::Bdef2(Bdef2::<BoneIndex> {
         bone_1_index: self.read.read_index(self.settings.bone_index_size)?,
         bone_2_index: self.read.read_index(self.settings.bone_index_size)?,
         bone_1_weight: self.read.read_f32::<LE>()?,
       }),
-      2u8 => WeightDeform::Bdef4(Bdef4::<I> {
+      2u8 => WeightDeform::Bdef4(Bdef4::<BoneIndex> {
         bone_1_index: self.read.read_index(self.settings.bone_index_size)?,
         bone_2_index: self.read.read_index(self.settings.bone_index_size)?,
         bone_3_index: self.read.read_index(self.settings.bone_index_size)?,
@@ -56,7 +56,7 @@ impl<R: Read> VertexReader<R> {
         bone_3_weight: self.read.read_f32::<LE>()?,
         bone_4_weight: self.read.read_f32::<LE>()?,
       }),
-      3u8 => WeightDeform::Sdef(Sdef::<I> {
+      3u8 => WeightDeform::Sdef(Sdef::<BoneIndex> {
         bone_1_index: self.read.read_index(self.settings.bone_index_size)?,
         bone_2_index: self.read.read_index(self.settings.bone_index_size)?,
         bone_1_weight: self.read.read_f32::<LE>()?,
@@ -64,7 +64,7 @@ impl<R: Read> VertexReader<R> {
         r0: self.read.read_vec3()?,
         r1: self.read.read_vec3()?,
       }),
-      4u8 => WeightDeform::Qdef(Qdef::<I> {
+      4u8 => WeightDeform::Qdef(Qdef::<BoneIndex> {
         bone_1_index: self.read.read_index(self.settings.bone_index_size)?,
         bone_2_index: self.read.read_index(self.settings.bone_index_size)?,
         bone_3_index: self.read.read_index(self.settings.bone_index_size)?,
@@ -88,7 +88,7 @@ impl<R: Read> VertexReader<R> {
     }))
   }
 
-  pub fn iter<I>(&mut self) -> VertexIterator<R, I> {
+  pub fn iter<BoneIndex>(&mut self) -> VertexIterator<R, BoneIndex> {
     VertexIterator {
       reader: self,
       phantom: PhantomData,
@@ -96,13 +96,13 @@ impl<R: Read> VertexReader<R> {
   }
 }
 
-pub struct VertexIterator<'a, R, I = i32> {
+pub struct VertexIterator<'a, R, BoneIndex = i32> {
   reader: &'a mut VertexReader<R>,
-  phantom: PhantomData<I>,
+  phantom: PhantomData<BoneIndex>,
 }
 
-impl<'a, R: Read, I: Index> Iterator for VertexIterator<'a, R, I> {
-  type Item = Result<Vertex<I>>;
+impl<'a, R: Read, BoneIndex: Index> Iterator for VertexIterator<'a, R, BoneIndex> {
+  type Item = Result<Vertex<BoneIndex>>;
 
   fn next(&mut self) -> Option<Self::Item> {
     self.reader.next_vertex().map_or(None, |v| v.map(Ok))

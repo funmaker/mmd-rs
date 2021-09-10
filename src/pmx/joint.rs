@@ -42,12 +42,12 @@ impl TryFrom<u8> for JointType {
 	}
 }
 
-pub struct Joint<RbI> {
+pub struct Joint<RigidBodyIndex> {
 	pub local_name: String,
 	pub universal_name: String,
 	pub joint_type: JointType,
-	pub rigid_body_a: RbI,
-	pub rigid_body_b: RbI,
+	pub rigid_body_a: RigidBodyIndex,
+	pub rigid_body_b: RigidBodyIndex,
 	pub position: [f32; 3],
 	pub rotation: [f32; 3],
 	pub position_min: [f32; 3],
@@ -58,7 +58,7 @@ pub struct Joint<RbI> {
 	pub rotation_spring: [f32; 3],
 }
 
-impl<RbI: Display> Display for Joint<RbI> {
+impl<RigidBodyIndex: Display> Display for Joint<RigidBodyIndex> {
 	fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {
 		write!(
 			f,

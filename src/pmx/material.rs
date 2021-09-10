@@ -60,12 +60,12 @@ impl TryFrom<u8> for EnvironmentBlendMode {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub enum Toon<I = i32> {
-  Texture(I),
+pub enum Toon<TextureIndex = i32> {
+  Texture(TextureIndex),
   Internal(u8),
 }
 
-impl<I: Display> Display for Toon<I> {
+impl<TextureIndex: Display> Display for Toon<TextureIndex> {
   fn fmt(&self, f: &mut Formatter) -> Result<(), std::fmt::Error> {
     match self {
       Toon::Texture(t) => write!(f, "texture({})", t),
@@ -74,7 +74,7 @@ impl<I: Display> Display for Toon<I> {
   }
 }
 
-pub struct Material<I = i32> {
+pub struct Material<TextureIndex = i32> {
   pub local_name: String,
   pub universal_name: String,
   pub diffuse_color: [f32; 4],
@@ -84,15 +84,15 @@ pub struct Material<I = i32> {
   pub draw_flags: BitFlags<DrawingFlags>,
   pub edge_color: [f32; 4],
   pub edge_scale: f32,
-  pub texture_index: I,
-  pub environment_index: I,
+  pub texture_index: TextureIndex,
+  pub environment_index: TextureIndex,
   pub environment_blend_mode: EnvironmentBlendMode,
-  pub toon: Toon<I>,
+  pub toon: Toon<TextureIndex>,
   pub metadata: String,
   pub surface_count: i32,
 }
 
-impl<I: Display> Display for Material<I> {
+impl<TextureIndex: Display> Display for Material<TextureIndex> {
   fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {
     write!(
       f,

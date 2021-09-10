@@ -2,7 +2,6 @@ use mmd::Error;
 use std::env;
 use std::fs::File;
 use std::io::BufReader;
-use mmd::reader::rigid_body::RigidBodyReader;
 
 fn main() -> Result<(), Error> {
   let filename = env::args().skip(1).next().unwrap();

@@ -30,13 +30,13 @@ impl<R: Read> MorphReader<R> {
     })
   }
 
-  pub fn next<I, VI, BI, MI, RBI>(&mut self) -> Result<Option<Morph<I, VI, BI, MI, RBI>>>
+  pub fn next<I, VI, BoneIndex, MI, RigidBodyIndex>(&mut self) -> Result<Option<Morph<I, VI, BoneIndex, MI, RigidBodyIndex>>>
   where
     I: Index,
     VI: VertexIndex,
-    BI: Index,
+    BoneIndex: Index,
     MI: Index,
-    RBI: Index,
+    RigidBodyIndex: Index,
   {
     if self.remaining <= 0 {
       return Ok(None);
@@ -73,7 +73,7 @@ impl<R: Read> MorphReader<R> {
     }))
   }
 
-  pub fn iter<I, VI, BI, MI, RBI>(&mut self) -> MorphIterator<R, I, VI, BI, MI, RBI> {
+  pub fn iter<I, VI, BoneIndex, MI, RigidBodyIndex>(&mut self) -> MorphIterator<R, I, VI, BoneIndex, MI, RigidBodyIndex> {
     MorphIterator {
       reader: self,
       phantom: PhantomData,
@@ -108,7 +108,7 @@ impl<R: Read> MorphReader<R> {
     Ok(offsets)
   }
 
-  fn next_bone_offsets<BI: Index>(&mut self, count: u32) -> Result<Vec<BoneOffset<BI>>> {
+  fn next_bone_offsets<BoneIndex: Index>(&mut self, count: u32) -> Result<Vec<BoneOffset<BoneIndex>>> {
     let mut offsets = Vec::with_capacity(count as usize);
 
     for _ in 0..count {
@@ -159,12 +159,12 @@ impl<R: Read> MorphReader<R> {
     Ok(offsets)
   }
 
-  fn next_impulse_offsets<RBI: Index>(&mut self, count: u32) -> Result<Vec<ImpulseOffset<RBI>>> {
+  fn next_impulse_offsets<RigidBodyIndex: Index>(&mut self, count: u32) -> Result<Vec<ImpulseOffset<RigidBodyIndex>>> {
     let mut offsets = Vec::with_capacity(count as usize);
 
     for _ in 0..count {
       offsets.push(ImpulseOffset {
-        rigid_body: self.read.read_index(self.settings.rigidbody_index_size)?,
+        rigid_body: self.read.read_index(self.settings.rigid_body_index_size)?,
         local: self.read.read_u8()? != 0,
         velocity: self.read.read_vec3()?,
         torque: self.read.read_vec3()?,
@@ -175,21 +175,21 @@ impl<R: Read> MorphReader<R> {
   }
 }
 
-pub struct MorphIterator<'a, R, I = i32, VI = i32, BI = i32, MI = i32, RBI = i32> {
+pub struct MorphIterator<'a, R, I = i32, VI = i32, BoneIndex = i32, MI = i32, RigidBodyIndex = i32> {
   reader: &'a mut MorphReader<R>,
-  phantom: PhantomData<(I, VI, BI, MI, RBI)>,
+  phantom: PhantomData<(I, VI, BoneIndex, MI, RigidBodyIndex)>,
 }
 
-impl<R, I, VI, BI, MI, RBI> Iterator for MorphIterator<'_, R, I, VI, BI, MI, RBI>
+impl<R, I, VI, BoneIndex, MI, RigidBodyIndex> Iterator for MorphIterator<'_, R, I, VI, BoneIndex, MI, RigidBodyIndex>
 where
   R: Read,
   I: Index,
   VI: VertexIndex,
-  BI: Index,
+  BoneIndex: Index,
   MI: Index,
-  RBI: Index,
+  RigidBodyIndex: Index,
 {
-  type Item = Result<Morph<I, VI, BI, MI, RBI>>;
+  type Item = Result<Morph<I, VI, BoneIndex, MI, RigidBodyIndex>>;
 
   fn next(&mut self) -> Option<Self::Item> {
     self.reader.next().map_or(None, |v| v.map(Ok))

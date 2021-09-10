@@ -10,7 +10,7 @@ pub struct Settings {
   pub material_index_size: IndexSize,
   pub bone_index_size: IndexSize,
   pub morph_index_size: IndexSize,
-  pub rigidbody_index_size: IndexSize,
+  pub rigid_body_index_size: IndexSize,
 }
 
 impl Display for Settings {
@@ -26,7 +26,7 @@ material index: {}, bone index: {}, morph index: {}, rigidbody index: {}",
       self.material_index_size,
       self.bone_index_size,
       self.morph_index_size,
-      self.rigidbody_index_size
+      self.rigid_body_index_size
     )
   }
 }

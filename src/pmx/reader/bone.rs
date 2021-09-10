@@ -30,7 +30,7 @@ impl<R: Read> BoneReader<R> {
     })
   }
 
-  pub fn next<I: Index>(&mut self) -> Result<Option<Bone<I>>> {
+  pub fn next<BoneIndex: Index>(&mut self) -> Result<Option<Bone<BoneIndex>>> {
     if self.remaining <= 0 {
       return Ok(None);
     }
@@ -90,7 +90,7 @@ impl<R: Read> BoneReader<R> {
       let link_count = self.read.read_u32::<LE>()? as usize;
       let mut links = Vec::with_capacity(link_count);
       for _i in 0..link_count {
-        let ik_bone = self.read.read_index::<I>(self.settings.bone_index_size)?;
+        let ik_bone = self.read.read_index(self.settings.bone_index_size)?;
         let limits = if self.read.read_u8()? != 0 {
           Some((self.read.read_vec3()?, self.read.read_vec3()?))
         } else {
@@ -133,13 +133,13 @@ impl<R: Read> BoneReader<R> {
   }
 }
 
-pub struct BoneIterator<'a, R, I = i32> {
+pub struct BoneIterator<'a, R, BoneIndex = i32> {
   reader: &'a mut BoneReader<R>,
-  phantom: PhantomData<I>,
+  phantom: PhantomData<BoneIndex>,
 }
 
-impl<R: Read, I: Index> Iterator for BoneIterator<'_, R, I> {
-  type Item = Result<Bone<I>>;
+impl<R: Read, BoneIndex: Index> Iterator for BoneIterator<'_, R, BoneIndex> {
+  type Item = Result<Bone<BoneIndex>>;
 
   fn next(&mut self) -> Option<Self::Item> {
     self.reader.next().map_or(None, |v| v.map(Ok))

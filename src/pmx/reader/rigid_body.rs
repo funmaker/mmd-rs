@@ -30,7 +30,7 @@ impl<R: Read> RigidBodyReader<R> {
     })
   }
 
-  pub fn next<BI: Index>(&mut self) -> Result<Option<RigidBody<BI>>> {
+  pub fn next<BoneIndex: Index>(&mut self) -> Result<Option<RigidBody<BoneIndex>>> {
     if self.remaining <= 0 {
       return Ok(None);
     }
@@ -56,7 +56,7 @@ impl<R: Read> RigidBodyReader<R> {
     }))
   }
 
-  pub fn iter<BI>(&mut self) -> RigidBodyIterator<R, BI> {
+  pub fn iter<BoneIndex>(&mut self) -> RigidBodyIterator<R, BoneIndex> {
     RigidBodyIterator {
       reader: self,
       phantom: PhantomData,
@@ -64,13 +64,13 @@ impl<R: Read> RigidBodyReader<R> {
   }
 }
 
-pub struct RigidBodyIterator<'a, R, BI = i32> {
+pub struct RigidBodyIterator<'a, R, BoneIndex = i32> {
   reader: &'a mut RigidBodyReader<R>,
-  phantom: PhantomData<BI>,
+  phantom: PhantomData<BoneIndex>,
 }
 
-impl<R: Read, BI: Index> Iterator for RigidBodyIterator<'_, R, BI> {
-  type Item = Result<RigidBody<BI>>;
+impl<R: Read, BoneIndex: Index> Iterator for RigidBodyIterator<'_, R, BoneIndex> {
+  type Item = Result<RigidBody<BoneIndex>>;
 
   fn next(&mut self) -> Option<Self::Item> {
     self.reader.next().map_or(None, |v| v.map(Ok))

@@ -3,12 +3,12 @@ use itertools::Itertools;
 
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub enum Frame<BI, MoI> {
-	Bone(BI),
-	Morph(MoI),
+pub enum Frame<BoneIndex, MorphIndex> {
+	Bone(BoneIndex),
+	Morph(MorphIndex),
 }
 
-impl<BI: Display, MoI: Display> Display for Frame<BI, MoI> {
+impl<BoneIndex: Display, MorphIndex: Display> Display for Frame<BoneIndex, MorphIndex> {
 	fn fmt(&self, f: &mut Formatter) -> Result<(), std::fmt::Error> {
 		match self {
 			Frame::Bone(id) => write!(f, "bone {}", id),
@@ -17,16 +17,16 @@ impl<BI: Display, MoI: Display> Display for Frame<BI, MoI> {
 	}
 }
 
-pub struct DisplayFrame<BI, MoI> {
+pub struct DisplayFrame<BoneIndex, MorphIndex> {
 	pub local_name: String,
 	pub universal_name: String,
 	pub special_flag: bool,
-	pub frames: Vec<Frame<BI, MoI>>,
+	pub frames: Vec<Frame<BoneIndex, MorphIndex>>,
 }
 
-impl<BI, MoI> Display for DisplayFrame<BI, MoI>
+impl<BoneIndex, MorphIndex> Display for DisplayFrame<BoneIndex, MorphIndex>
 	where
-		Frame<BI, MoI>: Display,
+		Frame<BoneIndex, MorphIndex>: Display,
 {
 	fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {
 		write!(

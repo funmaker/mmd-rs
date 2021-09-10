@@ -30,12 +30,12 @@ impl Display for BoneFlagsFmt {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub enum Connection<I> {
-  Index(I),
+pub enum Connection<BoneIndex> {
+  Index(BoneIndex),
   Position([f32; 3]),
 }
 
-impl<I: Display> Display for Connection<I> {
+impl<BoneIndex: Display> Display for Connection<BoneIndex> {
   fn fmt(&self, f: &mut Formatter) -> Result<(), std::fmt::Error> {
     match self {
       Connection::Index(t) => write!(f, "index({})", t),
@@ -45,12 +45,12 @@ impl<I: Display> Display for Connection<I> {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub struct Additional<I> {
-  pub parent: I,
+pub struct Additional<BoneIndex> {
+  pub parent: BoneIndex,
   pub rate: f32,
 }
 
-impl<I: Display> Display for Additional<I> {
+impl<BoneIndex: Display> Display for Additional<BoneIndex> {
   fn fmt(&self, f: &mut Formatter) -> Result<(), std::fmt::Error> {
     write!(f, "{} at rate {}", self.parent, self.rate)
   }
@@ -69,14 +69,14 @@ impl Display for LocalAxis {
 }
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct InverseKinematics<I> {
-  pub ik_bone: I,
+pub struct InverseKinematics<BoneIndex> {
+  pub ik_bone: BoneIndex,
   pub iterations: u32,
   pub limit_angle: f32,
-  pub links: Vec<IKLink<I>>,
+  pub links: Vec<IKLink<BoneIndex>>,
 }
 
-impl<I: Display> Display for InverseKinematics<I> {
+impl<BoneIndex: Display> Display for InverseKinematics<BoneIndex> {
   fn fmt(&self, f: &mut Formatter) -> Result<(), std::fmt::Error> {
     write!(
       f,
@@ -90,33 +90,33 @@ impl<I: Display> Display for InverseKinematics<I> {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
-pub struct IKLink<I> {
-  pub ik_bone: I,
+pub struct IKLink<BoneIndex> {
+  pub ik_bone: BoneIndex,
   pub limits: Option<([f32; 3], [f32; 3])>,
 }
 
-impl<I: Display> Display for IKLink<I> {
+impl<BoneIndex: Display> Display for IKLink<BoneIndex> {
   fn fmt(&self, f: &mut Formatter) -> Result<(), std::fmt::Error> {
     write!(f, "link: {} limits: {:?}", self.ik_bone, self.limits)
   }
 }
 
-pub struct Bone<I> {
+pub struct Bone<BoneIndex> {
   pub local_name: String,
   pub universal_name: String,
   pub position: [f32; 3],
-  pub parent: I,
+  pub parent: BoneIndex,
   pub transform_level: i32,
   pub bone_flags: BitFlags<BoneFlags>,
-  pub connection: Connection<I>,
-  pub additional: Option<Additional<I>>,
+  pub connection: Connection<BoneIndex>,
+  pub additional: Option<Additional<BoneIndex>>,
   pub fixed_axis: Option<[f32; 3]>,
   pub local_axis: Option<LocalAxis>,
   pub external_parent_transform: Option<i32>,
-  pub inverse_kinematics: Option<InverseKinematics<I>>,
+  pub inverse_kinematics: Option<InverseKinematics<BoneIndex>>,
 }
 
-impl<I: Display> Display for Bone<I> {
+impl<BoneIndex: Display> Display for Bone<BoneIndex> {
   fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {
     write!(
       f,

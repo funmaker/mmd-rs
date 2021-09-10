@@ -29,10 +29,10 @@ impl<R: Read> DisplayReader<R> {
     })
   }
 
-  pub fn next<BI, MoI>(&mut self) -> Result<Option<DisplayFrame<BI, MoI>>>
+  pub fn next<BoneIndex, MorphIndex>(&mut self) -> Result<Option<DisplayFrame<BoneIndex, MorphIndex>>>
   where
-    BI: Index,
-    MoI: Index,
+    BoneIndex: Index,
+    MorphIndex: Index,
   {
     if self.remaining <= 0 {
       return Ok(None);
@@ -64,7 +64,7 @@ impl<R: Read> DisplayReader<R> {
     }))
   }
 
-  pub fn iter<BI, MoI>(&mut self) -> DisplayIterator<R, BI, MoI> {
+  pub fn iter<BoneIndex, MorphIndex>(&mut self) -> DisplayIterator<R, BoneIndex, MorphIndex> {
     DisplayIterator {
       reader: self,
       phantom: PhantomData,
@@ -72,13 +72,13 @@ impl<R: Read> DisplayReader<R> {
   }
 }
 
-pub struct DisplayIterator<'a, R, BI = i32, MoI = i32> {
+pub struct DisplayIterator<'a, R, BoneIndex = i32, MorphIndex = i32> {
   reader: &'a mut DisplayReader<R>,
-  phantom: PhantomData<(BI, MoI)>,
+  phantom: PhantomData<(BoneIndex, MorphIndex)>,
 }
 
-impl<R: Read, BI: Index, MoI: Index> Iterator for DisplayIterator<'_, R, BI, MoI> {
-  type Item = Result<DisplayFrame<BI, MoI>>;
+impl<R: Read, BoneIndex: Index, MorphIndex: Index> Iterator for DisplayIterator<'_, R, BoneIndex, MorphIndex> {
+  type Item = Result<DisplayFrame<BoneIndex, MorphIndex>>;
 
   fn next(&mut self) -> Option<Self::Item> {
     self.reader.next().map_or(None, |v| v.map(Ok))

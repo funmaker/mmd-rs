@@ -40,7 +40,7 @@ impl<R: Read> HeaderReader<R> {
       material_index_size: IndexSize::try_from(globals[4])?,
       bone_index_size: IndexSize::try_from(globals[5])?,
       morph_index_size: IndexSize::try_from(globals[6])?,
-      rigidbody_index_size: IndexSize::try_from(globals[7])?,
+      rigid_body_index_size: IndexSize::try_from(globals[7])?,
     };
 
     Ok(HeaderReader::<R> {

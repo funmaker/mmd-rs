@@ -31,7 +31,7 @@ impl<R: Read> MaterialReader<R> {
     })
   }
 
-  pub fn next<I: Index>(&mut self) -> Result<Option<Material<I>>> {
+  pub fn next<TextureIndex: Index>(&mut self) -> Result<Option<Material<TextureIndex>>> {
     if self.remaining <= 0 {
       return Ok(None);
     }
@@ -61,7 +61,7 @@ impl<R: Read> MaterialReader<R> {
     }))
   }
 
-  pub fn iter<I>(&mut self) -> MaterialIterator<R, I> {
+  pub fn iter<TextureIndex>(&mut self) -> MaterialIterator<R, TextureIndex> {
     MaterialIterator {
       reader: self,
       phantom: PhantomData,
@@ -69,13 +69,13 @@ impl<R: Read> MaterialReader<R> {
   }
 }
 
-pub struct MaterialIterator<'a, R, I = i32> {
+pub struct MaterialIterator<'a, R, TextureIndex = i32> {
   reader: &'a mut MaterialReader<R>,
-  phantom: PhantomData<I>,
+  phantom: PhantomData<TextureIndex>,
 }
 
-impl<R: Read, I: Index> Iterator for MaterialIterator<'_, R, I> {
-  type Item = Result<Material<I>>;
+impl<R: Read, TextureIndex: Index> Iterator for MaterialIterator<'_, R, TextureIndex> {
+  type Item = Result<Material<TextureIndex>>;
 
   fn next(&mut self) -> Option<Self::Item> {
     self.reader.next().map_or(None, |v| v.map(Ok))

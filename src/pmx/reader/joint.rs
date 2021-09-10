@@ -30,7 +30,7 @@ impl<R: Read> JointReader<R> {
     })
   }
 
-  pub fn next<RbI: Index>(&mut self) -> Result<Option<Joint<RbI>>> {
+  pub fn next<RigidBodyIndex: Index>(&mut self) -> Result<Option<Joint<RigidBodyIndex>>> {
     if self.remaining <= 0 {
       return Ok(None);
     }
@@ -41,8 +41,8 @@ impl<R: Read> JointReader<R> {
       local_name: self.read.read_text(self.settings.text_encoding)?,
       universal_name: self.read.read_text(self.settings.text_encoding)?,
       joint_type: JointType::try_from(self.read.read_u8()?)?,
-      rigid_body_a: self.read.read_index(self.settings.rigidbody_index_size)?,
-      rigid_body_b: self.read.read_index(self.settings.rigidbody_index_size)?,
+      rigid_body_a: self.read.read_index(self.settings.rigid_body_index_size)?,
+      rigid_body_b: self.read.read_index(self.settings.rigid_body_index_size)?,
       position: self.read.read_vec3()?,
       rotation: self.read.read_vec3()?,
       position_min: self.read.read_vec3()?,
@@ -54,7 +54,7 @@ impl<R: Read> JointReader<R> {
     }))
   }
 
-  pub fn iter<RbI>(&mut self) -> JointIterator<R, RbI> {
+  pub fn iter<RigidBodyIndex>(&mut self) -> JointIterator<R, RigidBodyIndex> {
     JointIterator {
       reader: self,
       phantom: PhantomData,
@@ -62,13 +62,13 @@ impl<R: Read> JointReader<R> {
   }
 }
 
-pub struct JointIterator<'a, R, RbI = i32> {
+pub struct JointIterator<'a, R, RigidBodyIndex = i32> {
   reader: &'a mut JointReader<R>,
-  phantom: PhantomData<RbI>,
+  phantom: PhantomData<RigidBodyIndex>,
 }
 
-impl<R: Read, RbI: Index> Iterator for JointIterator<'_, R, RbI> {
-  type Item = Result<Joint<RbI>>;
+impl<R: Read, RigidBodyIndex: Index> Iterator for JointIterator<'_, R, RigidBodyIndex> {
+  type Item = Result<Joint<RigidBodyIndex>>;
 
   fn next(&mut self) -> Option<Self::Item> {
     self.reader.next().map_or(None, |v| v.map(Ok))

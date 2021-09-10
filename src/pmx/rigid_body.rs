@@ -64,10 +64,10 @@ impl TryFrom<u8> for PhysicsMode {
 	}
 }
 
-pub struct RigidBody<BI> {
+pub struct RigidBody<BoneIndex> {
 	pub local_name: String,
 	pub universal_name: String,
-	pub bone_index: BI,
+	pub bone_index: BoneIndex,
 	pub group_id: u8,
 	pub non_collision_mask: u16,
 	pub shape: ShapeType,
@@ -82,7 +82,7 @@ pub struct RigidBody<BI> {
 	pub physics_mode: PhysicsMode,
 }
 
-impl<BI: Display> Display for RigidBody<BI> {
+impl<BoneIndex: Display> Display for RigidBody<BoneIndex> {
 	fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {
 		write!(
 			f,
