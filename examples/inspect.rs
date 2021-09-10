@@ -2,6 +2,7 @@ use mmd::Error;
 use std::env;
 use std::fs::File;
 use std::io::BufReader;
+use mmd::reader::rigid_body::RigidBodyReader;
 
 fn main() -> Result<(), Error> {
   let filename = env::args().skip(1).next().unwrap();
@@ -46,6 +47,12 @@ fn main() -> Result<(), Error> {
   let mut displays = DisplayReader::<_>::new(morphs)?;
   println!("\n\nDisplay Frames:");
   for (i, d) in displays.iter::<i32, i32>().enumerate() {
+    println!("\n{}) {}", i, d?);
+  }
+  
+  let mut rigid_bodies = RigidBodyReader::<_>::new(displays)?;
+  println!("\n\nRigid Bodies:");
+  for (i, d) in rigid_bodies.iter::<i32>().enumerate() {
     println!("\n{}) {}", i, d?);
   }
 

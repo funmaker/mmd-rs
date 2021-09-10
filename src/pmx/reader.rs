@@ -7,6 +7,7 @@ pub mod surface;
 pub mod texture;
 pub mod vertex;
 pub mod display;
+pub mod rigid_body;
 
 pub use bone::BoneReader;
 pub use header::HeaderReader;
