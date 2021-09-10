@@ -8,6 +8,7 @@ pub mod texture;
 pub mod vertex;
 pub mod display;
 pub mod rigid_body;
+pub mod joint;
 
 pub use bone::BoneReader;
 pub use header::HeaderReader;
@@ -17,3 +18,5 @@ pub use surface::SurfaceReader;
 pub use texture::TextureReader;
 pub use vertex::VertexReader;
 pub use display::DisplayReader;
+pub use rigid_body::RigidBodyReader;
+pub use joint::JointReader;

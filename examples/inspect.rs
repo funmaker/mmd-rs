@@ -52,8 +52,14 @@ fn main() -> Result<(), Error> {
   
   let mut rigid_bodies = RigidBodyReader::<_>::new(displays)?;
   println!("\n\nRigid Bodies:");
-  for (i, d) in rigid_bodies.iter::<i32>().enumerate() {
-    println!("\n{}) {}", i, d?);
+  for (i, r) in rigid_bodies.iter::<i32>().enumerate() {
+    println!("\n{}) {}", i, r?);
+  }
+  
+  let mut joints = JointReader::<_>::new(rigid_bodies)?;
+  println!("\n\nJoints:");
+  for (i, j) in joints.iter::<i32>().enumerate() {
+    println!("\n{}) {}", i, j?);
   }
 
   Ok(())

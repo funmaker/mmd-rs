@@ -9,3 +9,4 @@ pub mod vertex;
 pub mod weight_deform;
 pub mod display;
 pub mod rigid_body;
+pub mod joint;
