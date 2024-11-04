@@ -54,7 +54,7 @@ impl<R: Read> RigidBodyReader<R> {
       universal_name: self.read.read_text(self.settings.text_encoding)?,
       bone_index: self.read.read_index(self.settings.bone_index_size)?,
       group_id: self.read.read_u8()?,
-      non_collision_mask: self.read.read_u16::<LE>()?,
+      collision_mask: self.read.read_u16::<LE>()?,
       shape: ShapeType::try_from(self.read.read_u8()?)?,
       shape_size: self.read.read_vec3::<C>()?,
       shape_position: self.read.read_vec3::<C>()?,
