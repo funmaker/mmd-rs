@@ -66,7 +66,7 @@ impl<R: Read> JointReader<R> {
     }))
   }
 
-  pub fn iter<C>(&mut self) -> JointIterator<R, C> {
+  pub fn iter<C>(&mut self) -> JointIterator<'_, R, C> {
     JointIterator {
       reader: self,
       phantom: PhantomData,

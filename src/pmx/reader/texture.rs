@@ -49,7 +49,7 @@ impl<R: Read> TextureReader<R> {
     self.read.read_text(self.settings.text_encoding).map(Some)
   }
 
-  pub fn iter(&mut self) -> TextureIterator<R> {
+  pub fn iter(&mut self) -> TextureIterator<'_, R> {
     TextureIterator { reader: self }
   }
 }

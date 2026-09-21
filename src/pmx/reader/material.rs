@@ -73,7 +73,7 @@ impl<R: Read> MaterialReader<R> {
     }))
   }
 
-  pub fn iter<C>(&mut self) -> MaterialIterator<R, C> {
+  pub fn iter<C>(&mut self) -> MaterialIterator<'_, R, C> {
     MaterialIterator {
       reader: self,
       phantom: PhantomData,

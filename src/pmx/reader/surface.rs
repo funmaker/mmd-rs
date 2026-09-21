@@ -59,7 +59,7 @@ impl<R: Read> SurfaceReader<R> {
     ]))
   }
 
-  pub fn iter<I>(&mut self) -> SurfaceIterator<R, I> {
+  pub fn iter<I>(&mut self) -> SurfaceIterator<'_, R, I> {
     SurfaceIterator {
       reader: self,
       phantom: PhantomData,

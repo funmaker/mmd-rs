@@ -139,7 +139,7 @@ impl<R: Read> BoneReader<R> {
     }))
   }
 
-  pub fn iter<C>(&mut self) -> BoneIterator<R, C> {
+  pub fn iter<C>(&mut self) -> BoneIterator<'_, R, C> {
     BoneIterator {
       reader: self,
       phantom: PhantomData,

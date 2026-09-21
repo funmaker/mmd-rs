@@ -68,7 +68,7 @@ impl<R: Read> RigidBodyReader<R> {
     }))
   }
 
-  pub fn iter<C>(&mut self) -> RigidBodyIterator<R, C> {
+  pub fn iter<C>(&mut self) -> RigidBodyIterator<'_, R, C> {
     RigidBodyIterator {
       reader: self,
       phantom: PhantomData,

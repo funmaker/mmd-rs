@@ -98,7 +98,7 @@ impl<R: Read> VertexReader<R> {
     }))
   }
 
-  pub fn iter<C>(&mut self) -> VertexIterator<R, C> {
+  pub fn iter<C>(&mut self) -> VertexIterator<'_, R, C> {
     VertexIterator {
       reader: self,
       phantom: PhantomData,

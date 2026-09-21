@@ -78,7 +78,7 @@ impl<R: Read> MorphReader<R> {
     }))
   }
 
-  pub fn iter<C>(&mut self) -> MorphIterator<R, C> {
+  pub fn iter<C>(&mut self) -> MorphIterator<'_, R, C> {
     MorphIterator {
       reader: self,
       phantom: PhantomData,

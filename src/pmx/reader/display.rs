@@ -72,7 +72,7 @@ impl<R: Read> DisplayReader<R> {
     }))
   }
 
-  pub fn iter<C>(&mut self) -> DisplayIterator<R, C> {
+  pub fn iter<C>(&mut self) -> DisplayIterator<'_, R, C> {
     DisplayIterator {
       reader: self,
       phantom: PhantomData,
